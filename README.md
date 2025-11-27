@@ -1,5 +1,3 @@
-README – Salla Metrics Server
-
 ## Overview
 
 This tiny Express server connects to the **Salla Admin API** and returns **high-level product metrics** only (no product details).  
@@ -49,7 +47,7 @@ Keeping the token in the environment (and out of the code) makes this project sa
 
 ## Server code (conceptual)
 
-The actual server file is `var express = require("express");.jsx`.  
+The actual server file is `index.js`.  
 At a high level it:
 
 1. **Bootstraps** Express + CORS and reads `SALLA_ACCESS_TOKEN`.
