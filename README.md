@@ -132,7 +132,7 @@ Copy/paste the expressions as-is (they assume the root JSON looks like `{ succes
 
 ### Unit report
 
-`@.{value: data.total_sales_value, change: data.total_sold_quantity, unit: 'SAR', average: data.daily_sales_summary.average, reviews: {value: coalesce(data.average_rating, \`0\`), total: 5}}`
+`@.{value: data.total_sales_value, change: data.total_sold_quantity, unit: "SAR", average: data.daily_sales_summary.average}`
 
 ### Bar report (inventory buckets)
 
