@@ -20,75 +20,90 @@ The core idea:
 
 ---
 
-## Environment setup
+## Environment Setup
 
-**Generate your Salla Access Token:**  
-Use Salla’s official guide for generating a secure token:  
-https://docs.salla.dev/421118m0#generate-access-token-using-salla-app-and-demo-store
-
-The server reads your token from `SALLA_ACCESS_TOKEN`.
-
-### Locally (terminal)
-
-```bash
-export SALLA_ACCESS_TOKEN="YOUR_SALLA_ACCESS_TOKEN"
-# Windows PowerShell:
-# $env:SALLA_ACCESS_TOKEN="YOUR_SALLA_ACCESS_TOKEN"
-
-npm install
-npm start
-# or
-node index.js
-```
-
-Keeping the token in the environment (and out of the code) makes the project safe to fork and share.
+This section explains **everything required** to run the server locally, including:
+- Project installation
+- Environment configuration
+- Generating and setting the Salla access token
 
 ---
 
-## Forking and running the project locally
+### 1. Clone the Repository
 
-This is an open source project. The recommended workflow is to **fork it**, clone it, and run it locally.
+Start by cloning the project (recommended: clone your own fork):
 
-### 1. Fork the repository
-- Go to the GitHub page
-- Click **Fork**
-- GitHub creates a copy under your username
-
-### 2. Clone your fork
 ```bash
-git clone https://github.com/<YOUR_USERNAME>/<YOUR_FORK>.git
-cd <YOUR_FORK>
+git clone https://github.com/<YOUR_GITHUB_USERNAME>/<YOUR_FORK_NAME>.git
+cd <YOUR_FORK_NAME>
 ```
 
-### 3. Install dependencies
+---
+
+### 2. Install Dependencies
+
+Ensure you have **Node.js 18+** installed, then run:
+
 ```bash
 npm install
+# or
+pnpm install
+# or
+yarn install
 ```
 
-### 4. Set the environment variable
+---
+
+### 3. Generate Your Salla Access Token
+
+You must generate an access token with permissions to read products from the **Salla Admin API**.
+
+Follow Salla’s official guide:
+
+**Generate access token:**  
+https://docs.salla.dev/421118m0#generate-access-token-using-salla-app-and-demo-store
+
+This token will be used for authenticated API calls. Keep it private.
+
+---
+
+### 4. Set Environment Variables Locally
+
+The server expects your Salla token to be stored in the environment variable `SALLA_ACCESS_TOKEN`.
+
+In macOS/Linux:
 ```bash
 export SALLA_ACCESS_TOKEN="YOUR_SALLA_ACCESS_TOKEN"
 ```
 
-### 5. Run the server
+In Windows PowerShell:
+```powershell
+$env:SALLA_ACCESS_TOKEN="YOUR_SALLA_ACCESS_TOKEN"
+```
+
+You MUST run this in the same terminal session that will start the server.
+
+---
+
+### 5. Start the Server
+
+Once everything is configured, run:
+
 ```bash
 npm start
-# or
+# or if no start script exists
 node index.js
 ```
 
-Open:
+If the server starts successfully, you’ll see it listening on:
+
 ```
 http://localhost:3000
 ```
 
-You can now:
-- Hit `/` to receive metrics
-- Modify bucket logic
-- Add endpoints
-- Extend JMESPath mappings
+Call `GET /` in your browser or with a tool like Postman to see your aggregated metrics.
 
----
+Your environment is now fully configured. Poof, you’re ready 🚀 (minus emojis).
 
 ## Running the project on CodeSandbox
 
