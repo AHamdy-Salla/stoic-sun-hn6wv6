@@ -101,9 +101,9 @@ If the server starts successfully, you’ll see it listening on:
 http://localhost:3000
 ```
 
-Call `GET /` in your browser or with a tool like Postman to see your aggregated metrics.
+Call `GET /` in your browser or with a tool like [Postman](https://postman.com) to see your aggregated metrics.
 
-Your environment is now fully configured. Poof, you’re ready 🚀 (minus emojis).
+Your environment is now fully configured. 
 
 ## Running the project on CodeSandbox
 
