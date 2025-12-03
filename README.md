@@ -1,10 +1,6 @@
-## Overview
+This repository is a **free-to-use template** demonstrating how to build a custom reporting backend for the **Report Creator** feature in the **Salla Partners Portal**. It shows developers how to:
 
-This tiny Express server connects to the **Salla Admin API** and returns **high-level product metrics** only (no product details).  
-It is designed to be:
-- **Simple to read and fork**
-- **Safe for open source** (no tokens in code)
-- **Easy to consume with JMESPath**, including your *unit report* display type.
+The goal of this example is to provide a clear, lightweight starting point that any partner or developer can fork, extend, and adapt into their own analytics or reporting tools.
 
 The core idea:
 - Server calls `https://api.salla.dev/admin/v2/products` with your access token.
@@ -16,56 +12,138 @@ The core idea:
 
 ## Prerequisites
 
-- **Node.js** (you already have it; works with Node 18+ and Node 20+).
-- **Salla access token** with permission to read products.
+- **Node.js** (works with Node 18+ and Node 20+)
+- **Salla access token** with permission to read products
 - Basic familiarity with:
-  - **JMESPath** – JSON query language: [jmespath.org](https://jmespath.org/)
-  - **Salla Merchant APIs** – [docs.salla.dev](https://docs.salla.dev/)
+  - **JMESPath** – JSON query language: https://jmespath.org/
+  - **Salla Merchant APIs** – https://docs.salla.dev/
 
 ---
 
 ## Environment setup
 
-The server reads your Salla token from an environment variable called `SALLA_ACCESS_TOKEN`.
+**Generate your Salla Access Token:**  
+Use Salla’s official guide for generating a secure token:  
+https://docs.salla.dev/421118m0#generate-access-token-using-salla-app-and-demo-store
 
-- **Locally (terminal):**
+The server reads your token from `SALLA_ACCESS_TOKEN`.
 
-  ```bash
-  export SALLA_ACCESS_TOKEN="YOUR_SALLA_ACCESS_TOKEN"
-  node "var express = require(\"express\");.jsx"
-  ```
+### Locally (terminal)
 
-- **On CodeSandbox:**
-  - Open the **Environment Variables** / **Secrets** panel.
-  - Add a variable named `SALLA_ACCESS_TOKEN`.
-  - Paste your Salla access token as the value and save.
-  - Start the server (CodeSandbox will run the Node entry file and inject the env variable).
+```bash
+export SALLA_ACCESS_TOKEN="YOUR_SALLA_ACCESS_TOKEN"
+# Windows PowerShell:
+# $env:SALLA_ACCESS_TOKEN="YOUR_SALLA_ACCESS_TOKEN"
 
-Keeping the token in the environment (and out of the code) makes this project safe to fork and share publicly.
+npm install
+npm start
+# or
+node index.js
+```
+
+Keeping the token in the environment (and out of the code) makes the project safe to fork and share.
+
+---
+
+## Forking and running the project locally
+
+This is an open source project. The recommended workflow is to **fork it**, clone it, and run it locally.
+
+### 1. Fork the repository
+- Go to the GitHub page
+- Click **Fork**
+- GitHub creates a copy under your username
+
+### 2. Clone your fork
+```bash
+git clone https://github.com/<YOUR_USERNAME>/<YOUR_FORK>.git
+cd <YOUR_FORK>
+```
+
+### 3. Install dependencies
+```bash
+npm install
+```
+
+### 4. Set the environment variable
+```bash
+export SALLA_ACCESS_TOKEN="YOUR_SALLA_ACCESS_TOKEN"
+```
+
+### 5. Run the server
+```bash
+npm start
+# or
+node index.js
+```
+
+Open:
+```
+http://localhost:3000
+```
+
+You can now:
+- Hit `/` to receive metrics
+- Modify bucket logic
+- Add endpoints
+- Extend JMESPath mappings
+
+---
+
+## Running the project on CodeSandbox
+
+### Import from GitHub
+1. Visit https://codesandbox.io/
+2. Create Sandbox → **Import from GitHub**
+3. Paste your fork link
+4. CodeSandbox builds a Node environment
+
+### OR start from a Node template
+- Create a new **Node / Express** sandbox
+- Copy in project files
+
+### Add `SALLA_ACCESS_TOKEN` in CodeSandbox
+
+Once signed in, open the **Environment Variables / Secrets** panel:
+
+![SCR-20251203-lvbf.png](https://api.apidog.com/api/v1/projects/451700/resources/367108/image-preview)
+
+Add the variable:
+- **Name:** `SALLA_ACCESS_TOKEN`
+- **Value:** your generated Salla token
+
+![SCR-20251203-lvre.png](https://api.apidog.com/api/v1/projects/451700/resources/367109/image-preview)
+
+CodeSandbox injects the token automatically.
+
+Then run:
+```bash
+npm start
+```
 
 ---
 
 ## Server code (conceptual)
 
-The actual server file is `index.js`.  
-At a high level it:
+`index.js` performs:
 
-1. **Bootstraps** Express + CORS and reads `SALLA_ACCESS_TOKEN`.
-2. **Paginates through every product** (`per_page=100`, follows `pagination.links.next`).
-3. **Aggregates on the fly**:
-   - Core totals (products, quantity, sold, views, sales value, inventory value, rating).
-   - Bucketed counts for bar charts, status/channel breakdowns, calendar heatmap cells, funnel stats, daily revenue map, top products, summary cards, and AG Grid rows.
-4. **Returns a single JSON payload** where every section (`inventory_bands`, `status_breakdown`, `sales_funnel`, `daily_sales`, `summary_cards`, `agrid_rows`, etc.) is ready to plug into its display type.
-
-Forkers typically only need to:
-- Set `SALLA_ACCESS_TOKEN`.
-- Optionally adjust bucket definitions, add/remove metrics, or expose extra endpoints.
+1. Reads `SALLA_ACCESS_TOKEN`
+2. Calls Salla product list (`per_page=100`, follow pagination)
+3. Computes:
+   - Totals
+   - Inventory buckets
+   - Status breakdowns
+   - Heatmap data
+   - Funnel metrics
+   - Daily revenue
+   - Top products
+   - Summary cards
+   - AG Grid table rows
+4. Returns a JSON response ready for dashboards
 
 ---
 
 ## Response shape
-
-`GET /` returns:
 
 ```json
 {
@@ -80,94 +158,76 @@ Forkers typically only need to:
     "total_sales_value": 27450,
     "total_inventory_value": 91200,
     "average_rating": 4.2,
-    "inventory_bands": [...],
-    "inventory_series": [...],
-    "inventory_categories": [...],
-    "status_breakdown": [...],
-    "order_heatmap": [...],
-    "order_heatmap_labels": {...},
-    "channel_distribution": [...],
-    "channel_summary": {...},
-    "sales_funnel": [...],
+    "inventory_bands": [],
+    "inventory_series": [],
+    "inventory_categories": [],
+    "status_breakdown": [],
+    "order_heatmap": [],
+    "order_heatmap_labels": {},
+    "channel_distribution": [],
+    "channel_summary": {},
+    "sales_funnel": [],
     "funnel_rate": 3.7,
     "funnel_unit": "customers",
-    "daily_sales": [...],
-    "daily_sales_summary": {...},
-    "top_products": [...],
-    "summary_cards": [...],
-    "agrid_columns": [...],
-    "agrid_rows": [...]
+    "daily_sales": [],
+    "daily_sales_summary": {},
+    "top_products": [],
+    "summary_cards": [],
+    "agrid_columns": [],
+    "agrid_rows": []
   }
 }
 ```
 
-### Data dictionary (what each block feeds)
-
-| Field / Block | Purpose | Display type |
-| --- | --- | --- |
-| `total_products_computed`, `total_products_reported`, `total_quantity`, `total_sold_quantity`, `total_views` | Core totals used for KPI/unit cards and summary rows | Unit, Summary |
-| `total_sales_value`, `total_inventory_value`, `average_rating` | Monetary + rating aggregates for richer cards | Unit, Summary |
-| `inventory_bands`, `inventory_series`, `inventory_categories` | Price-bucket stats (available vs sold) | Bar |
-| `status_breakdown` | Product counts per status (`sale`, `hidden`, etc.) | Breakdown |
-| `order_heatmap`, `order_heatmap_labels` | Day/hour intensity derived from update timestamps | Calendar |
-| `channel_distribution`, `channel_summary` | Product channel shares (web/app/pos) with summary stats | Distribution |
-| `sales_funnel`, `funnel_rate`, `funnel_unit` | Synthetic funnel (views → engaged → purchased) | Pipe |
-| `daily_sales`, `daily_sales_summary` | Approx revenue per day (price × sold) + summary | Plot |
-| `top_products` | Top sellers with percentage share and image | Ranking |
-| `summary_cards` | Ready-made summary widgets (title/current/previous/change/unit) | Summary |
-| `agrid_columns`, `agrid_rows` | Column schema + row data for AG Grid/table view | Agrid |
-
 ---
 
-## Using JMESPath with this API
-
-The server is designed to work nicely with **JMESPath** expressions.
-
-### Basic examples
-
-## Display type examples
-
-These examples map the live `/` response directly onto each report type.  
-Copy/paste the expressions as-is (they assume the root JSON looks like `{ success, status, data }`).
+## JMESPath examples
 
 ### Unit report
+```jmespath
+@.{value: data.total_sales_value, change: data.total_sold_quantity, unit: "SAR", average: data.daily_sales_summary.average}
+```
 
-`@.{value: data.total_sales_value, change: data.total_sold_quantity, unit: "SAR", average: data.daily_sales_summary.average}`
+### Bar report
+```jmespath
+@.{bars: data.inventory_bands, series: data.inventory_series, categories: data.inventory_categories}
+```
 
-### Bar report (inventory buckets)
+### Breakdown report
+```jmespath
+@.data.status_breakdown
+```
 
-`@.{bars: data.inventory_bands, series: data.inventory_series, categories: data.inventory_categories}`
+### Calendar report
+```jmespath
+@.{calendar: data.order_heatmap, labels: data.order_heatmap_labels}
+```
 
-### Breakdown report (status)
+### Distribution report
+```jmespath
+@.{value: data.channel_summary.value, change: data.channel_summary.change, average: data.channel_summary.average, distribution: data.channel_distribution}
+```
 
-`@.data.status_breakdown`
+### Pipe report
+```jmespath
+@.{plot: data.sales_funnel, rate: data.funnel_rate, unit: data.funnel_unit}
+```
 
-### Calendar report (heatmap)
+### Plot report
+```jmespath
+@.{value: data.daily_sales_summary.value, change: data.daily_sales_summary.change, unit: data.daily_sales_summary.unit, plot: data.daily_sales}
+```
 
-`@.{calendar: data.order_heatmap, labels: data.order_heatmap_labels}`
+### Ranking report
+```jmespath
+@.data.top_products
+```
 
-### Distribution report (channels)
+### Summary cards
+```jmespath
+@.data.summary_cards
+```
 
-`@.{value: data.channel_summary.value, change: data.channel_summary.change, average: data.channel_summary.average, distribution: data.channel_distribution}`
-
-### Pipe report (sales funnel)
-
-`@.{plot: data.sales_funnel, rate: data.funnel_rate, unit: data.funnel_unit}`
-
-### Plot report (daily revenue)
-
-`@.{value: data.daily_sales_summary.value, change: data.daily_sales_summary.change, unit: data.daily_sales_summary.unit, plot: data.daily_sales}`
-
-### Ranking report (top products)
-
-`@.data.top_products`
-
-### Summary report (cards)
-
-`@.data.summary_cards`
-
-### Agrid report (table)
-
-`@.{columns: data.agrid_columns, rows: data.agrid_rows}`
-
----
+### AG Grid
+```jmespath
+@.{columns: data.agrid_columns, rows: data.agrid_rows}
