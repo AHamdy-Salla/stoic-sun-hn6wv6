@@ -450,7 +450,7 @@ async function fetchProductMetrics() {
 // Minimal API: just expose high-level product metrics
 app.get("/", async (req, res) => {
   try {
-    const metrics = await fetchProductMetrics();
+    // const metrics = await fetchProductMetrics();
     res.status(200).json({
       success: true,
       status: 200,
