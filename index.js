@@ -8,7 +8,8 @@ const port = 8080;
 app.use(cors());
 
 const SALLA_PRODUCTS_URL = "https://api.salla.dev/admin/v2/products";
-const SALLA_ACCESS_TOKEN = process.env.SALLA_ACCESS_TOKEN;
+const SALLA_ACCESS_TOKEN =
+  "Bearer v4.public.eyJ1c2VyIjo2ODQwOTIzNDIsInN0b3JlIjo4MjgwMzA2MTAsInZlcmlmaWVkIjp0cnVlLCJzb3VyY2UiOiJwYXJ0bmVycyIsImZpbmdlcnByaW50IjoiZjNhNTAyNWYwNzcwMjdkNmJkMmQ1M2JlMzZjYTNjMmM1OGVhNGM1YmNlYWE3YjcwZDYzNWNmOWE5ZGEyNjdiNCIsImVtYWlsIjoiaHVpdWt6a2JsNmFtaW4zZUBlbWFpbC5wYXJ0bmVycyIsIm93bmVyIjo2ODQwOTIzNDIsImlwIjoiMTQyLjI0Ny4xODguMjIyIiwia2MiOiJTQSIsImZ0IjoibXMiLCJpc3MiOiJzYWxsYSIsImF1ZCI6InNhbGxhIiwiaWF0IjoiMjAyNi0wMi0yM1QxNDowODo0MiswMzowMCIsIm5iZiI6IjIwMjYtMDItMjNUMTQ6MDg6NDIrMDM6MDAiLCJleHAiOiIyMDI2LTAzLTA5VDE0OjA4OjQyKzAzOjAwIn1mglfsKuCGVkLwniOBD-APjDpvN9PLwEmLIyJ_b4tyvO8XnfsCcR-xxsz8o-NH6meBZgtLhBG6CRKvri60Oo4K";
 
 // Helpers shared across display models so forks stay consistent
 const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -450,8 +451,389 @@ async function fetchProductMetrics() {
 // Minimal API: just expose high-level product metrics
 app.get("/", async (req, res) => {
   try {
-    const metrics = await fetchProductMetrics();
-    res.status(200).json({ success: true, status: 200, data: metrics });
+    // const metrics = await fetchProductMetrics();
+    res.status(200).json({
+      success: true,
+      status: 200,
+      data: {
+        total_products_computed: 20,
+        total_products_reported: 20,
+        total_quantity: 54,
+        total_sold_quantity: 100,
+        total_views: 0,
+        total_sales_value: 17400,
+        total_inventory_value: 4982,
+        average_rating: null,
+        inventory_bands: [
+          { start: 0, end: 50, label: "0-50", ratios: [0, 0], counts: [0, 0] },
+          {
+            start: 50,
+            end: 100,
+            label: "50-100",
+            ratios: [100, 0],
+            counts: [40, 0],
+          },
+          {
+            start: 100,
+            end: 200,
+            label: "100-200",
+            ratios: [12, 88],
+            counts: [14, 100],
+          },
+          {
+            start: 200,
+            end: 500,
+            label: "200-500",
+            ratios: [0, 0],
+            counts: [0, 0],
+          },
+          {
+            start: 500,
+            end: null,
+            label: "500+",
+            ratios: [0, 0],
+            counts: [0, 0],
+          },
+        ],
+        inventory_series: [
+          { name: "Available", color: "#22c55e" },
+          { name: "Sold", color: "#f97316" },
+        ],
+        inventory_categories: [
+          { start: 0, end: 50, label: "0-50" },
+          { start: 50, end: 100, label: "50-100" },
+          { start: 100, end: 200, label: "100-200" },
+          { start: 200, end: 500, label: "200-500" },
+          { start: 500, end: null, label: "500+" },
+        ],
+        status_breakdown: [
+          {
+            name: "sale",
+            value: 20,
+            percentage: 100,
+            color: "#22c55e",
+            unit: "products",
+          },
+        ],
+        order_heatmap: [{ day: "Sun", hour: 0, value: 20 }],
+        order_heatmap_labels: {
+          no_value: "no_orders",
+          low_value: "low_orders",
+          medium_value: "medium_orders",
+          high_value: "high_orders",
+        },
+        channel_distribution: [
+          {
+            name: "web",
+            value: 20,
+            percentage: 100,
+            unit: "products",
+            color: "#0ea5e9",
+          },
+        ],
+        channel_summary: { value: 100, change: 0, average: 100 },
+        sales_funnel: [
+          { name: "Views", value: 240, percentage: 100 },
+          { name: "Engaged", value: 200, percentage: 83 },
+          { name: "Purchased", value: 100, percentage: 42 },
+        ],
+        funnel_rate: 41.67,
+        funnel_unit: "customers",
+        daily_sales: [{ date: "2024-04-21", value: 17400 }],
+        daily_sales_summary: {
+          value: 17400,
+          change: 11.11,
+          unit: "SAR",
+          average: 17400,
+        },
+        top_products: [
+          {
+            id: 1324608728,
+            name: "فستان",
+            value: 100,
+            percentage: 100,
+            unit: "orders",
+            image:
+              "https://salla-dev.s3.eu-central-1.amazonaws.com/nWzD/bL3FLXsYnlcjdn2TbeSdXh1y6nhiXWkzg7bMV9Lf.jpg",
+          },
+          {
+            id: 2098646495,
+            name: "فستان",
+            value: 0,
+            percentage: 0,
+            unit: "orders",
+            image:
+              "https://salla-dev.s3.eu-central-1.amazonaws.com/nWzD/ACknxzEIkcTdaFr1DETbQlXo5UwupBedJ9ZGyR8v.jpg",
+          },
+          {
+            id: 1366069213,
+            name: "فستان",
+            value: 0,
+            percentage: 0,
+            unit: "orders",
+            image:
+              "https://salla-dev.s3.eu-central-1.amazonaws.com/nWzD/m1JuFPTZeyNjtDm9pNK32leRr6m7zsetmFLlSw52.jpg",
+          },
+          {
+            id: 126247132,
+            name: "بنطلون",
+            value: 0,
+            percentage: 0,
+            unit: "orders",
+            image:
+              "https://salla-dev.s3.eu-central-1.amazonaws.com/nWzD/b6OgmDMuYUBQ4CZmO0JjyoJLHQd4uSL5zPIdeY8z.jpg",
+          },
+          {
+            id: 1541153490,
+            name: "فستان",
+            value: 0,
+            percentage: 0,
+            unit: "orders",
+            image:
+              "https://salla-dev.s3.eu-central-1.amazonaws.com/nWzD/Pseddamb67f447Gxg17knASStc7Wy9t7W7xUZjhL.jpg",
+          },
+          {
+            id: 167183313,
+            name: "بلوزة",
+            value: 0,
+            percentage: 0,
+            unit: "orders",
+            image:
+              "https://salla-dev.s3.eu-central-1.amazonaws.com/nWzD/zbgJtlRIcJ81ExBMmNZX8X3KVZVPM2Hzmi4vleMI.jpg",
+          },
+          {
+            id: 1009444048,
+            name: "فستان",
+            value: 0,
+            percentage: 0,
+            unit: "orders",
+            image:
+              "https://salla-dev.s3.eu-central-1.amazonaws.com/nWzD/D8jLeCWnenY3NXWxxNTNzCRyGZKPhtgoRXDfB3da.jpg",
+          },
+          {
+            id: 1649264087,
+            name: "جاكيت",
+            value: 0,
+            percentage: 0,
+            unit: "orders",
+            image:
+              "https://salla-dev.s3.eu-central-1.amazonaws.com/nWzD/iBBzFqENAn2B2X6cy8ssWkuzS7PAhZ9OQqpnd5ov.jpg",
+          },
+          {
+            id: 274769622,
+            name: "بنطلون",
+            value: 0,
+            percentage: 0,
+            unit: "orders",
+            image:
+              "https://salla-dev.s3.eu-central-1.amazonaws.com/nWzD/4kiVSOgGx1X5tJHWEVdppINWIY85QYDjNt34Qu8U.jpg",
+          },
+          {
+            id: 1184597973,
+            name: "بنطلون",
+            value: 0,
+            percentage: 0,
+            unit: "orders",
+            image:
+              "https://salla-dev.s3.eu-central-1.amazonaws.com/nWzD/kt4Oo7NWwX5jl5oI7mxG1L1izJTxm7lXGhhaZytq.jpg",
+          },
+        ],
+        summary_cards: [
+          {
+            title: "Total Products",
+            current: 20,
+            previous: 18,
+            change: 11.11,
+            unit: "products",
+          },
+          {
+            title: "Inventory Quantity",
+            current: 54,
+            previous: 49,
+            change: 10.2,
+            unit: "units",
+          },
+          {
+            title: "Sold Quantity",
+            current: 100,
+            previous: 90,
+            change: 11.11,
+            unit: "units",
+          },
+          { title: "Views", current: 0, previous: 0, change: 0, unit: "views" },
+        ],
+        agrid_columns: [
+          { field: "sku", headerName: "SKU", cellRenderer: "text" },
+          { field: "price", headerName: "Price", cellRenderer: "currency" },
+          { field: "quantity", headerName: "Quantity", cellRenderer: "text" },
+          { field: "sold", headerName: "Sold", cellRenderer: "badge" },
+          { field: "status", headerName: "Status", cellRenderer: "badge" },
+          { field: "views", headerName: "Views", cellRenderer: "text" },
+        ],
+        agrid_rows: [
+          {
+            sku: { value: "15504447-30000023080-" },
+            price: { value: 174, unit: "SAR" },
+            quantity: { value: 0, unit: "units" },
+            sold: { value: 100, unit: "orders", status: "success" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "15504448-30000024230-" },
+            price: { value: 149, unit: "SAR" },
+            quantity: { value: 0, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "15504449-300000237300-" },
+            price: { value: 144, unit: "SAR" },
+            quantity: { value: 2, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "15504454-50000005430-" },
+            price: { value: 94, unit: "SAR" },
+            quantity: { value: 1, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "15504457-300000238900-" },
+            price: { value: 94, unit: "SAR" },
+            quantity: { value: 6, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "15504463-10000031180-" },
+            price: { value: 89, unit: "SAR" },
+            quantity: { value: 3, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "15504464-30000025290-" },
+            price: { value: 149, unit: "SAR" },
+            quantity: { value: 2, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "15504469-40000006570-" },
+            price: { value: 84, unit: "SAR" },
+            quantity: { value: 3, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "15504471-50000004990-" },
+            price: { value: 84, unit: "SAR" },
+            quantity: { value: 2, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "15504472-5000000500000-" },
+            price: { value: 74, unit: "SAR" },
+            quantity: { value: 5, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "15701763-200000132500-" },
+            price: { value: 114, unit: "SAR" },
+            quantity: { value: 4, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "15900691-10000030310-" },
+            price: { value: 59, unit: "SAR" },
+            quantity: { value: 5, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "219991425-20000012830-" },
+            price: { value: 94, unit: "SAR" },
+            quantity: { value: 3, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "2400407-20000012320-" },
+            price: { value: 83, unit: "SAR" },
+            quantity: { value: 4, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "2400408-20000012470-" },
+            price: { value: 124, unit: "SAR" },
+            quantity: { value: 0, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "2400409-20000012660-" },
+            price: { value: 79, unit: "SAR" },
+            quantity: { value: 2, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "33000584-300000199800-" },
+            price: { value: 114, unit: "SAR" },
+            quantity: { value: 6, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "399991742-30000022830-" },
+            price: { value: 83, unit: "SAR" },
+            quantity: { value: 2, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "399991743-30000025110-" },
+            price: { value: 77, unit: "SAR" },
+            quantity: { value: 4, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+          {
+            sku: { value: "399991744-30000023450-" },
+            price: { value: 164, unit: "SAR" },
+            quantity: { value: 0, unit: "units" },
+            sold: { value: 0, unit: "orders", status: "warning" },
+            status: { value: "sale", status: "success" },
+            views: { value: 0, unit: "views" },
+          },
+        ],
+      },
+    });
   } catch (error) {
     console.error("Failed to fetch Salla product metrics:", error);
     res.status(500).json({
